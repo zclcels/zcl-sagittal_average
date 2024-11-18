@@ -1,0 +1,14 @@
+%%writefile zcl-Saggital_average/pyproject.toml
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Saggital_average"
+version = "0.1.0"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/zcl-Saggital_average",
+]
