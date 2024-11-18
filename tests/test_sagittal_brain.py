@@ -1,26 +1,42 @@
 import numpy as np
 import pandas as pd
 import unittest
-from src.saggital_brain.sagittal_brain import process_brain_data  # Replace with the actual function from Charlene's code
+import sys
+import os
+from pathlib import Path
+
+# Add the src directory to the Python path
+current_dir = Path(__file__).resolve().parent
+src_dir = current_dir.parents[1] / 'src'
+sys.path.append(str(src_dir))
+
+from sagittal_brain.sagittal_brain import run_averages  # Replace with the actual function from Charlene's code
 
 class TestSagittalBrain(unittest.TestCase):
 
     def setUp(self):
-        # Read the CSV file into a DataFrame
-        self.df = pd.read_csv('brain_sample.csv', header=None)
+        # Create an input dataset
+        self.data_input = np.zeros((20, 20))
+        self.data_input[-1, :] = 1
 
-        # Convert DataFrame to numpy array
-        self.input_array = self.df.to_numpy()
+        # Save it into a file
+        np.savetxt("brain_sample.csv", self.data_input, fmt='%d', delimiter=',')
 
-        # Calculate the expected output as the average of each row
-        self.expected_output_array = np.mean(self.input_array, axis=1)
+        # Create an array with expected result
+        self.expected = np.zeros(20)
+        self.expected[-1] = 1
 
-    def test_process_brain_data(self):
-        # Call the function from Charlene's code
-        output_array = process_brain_data(self.input_array)
+    def test_run_averages(self):
+        # Call the function with the files
+        run_averages(file_input="brain_sample.csv", file_output="brain_average.csv")
 
-        # Assert the output matches the expected output
-        np.testing.assert_array_almost_equal(output_array, self.expected_output_array)
+        # Load the result
+        result = np.loadtxt("brain_average.csv", delimiter=',')
 
-if __name__ == '__main__':
-    unittest.main()
+        # Compare the result with the expected values
+        np.testing.assert_array_equal(result, self.expected)
+
+    def tearDown(self):
+        # Clean up the files
+        os.remove("brain_sample.csv")
+        os.remove("brain_average.csv")
