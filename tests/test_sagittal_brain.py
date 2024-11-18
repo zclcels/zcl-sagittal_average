@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import unittest
-from sagittal_brain import process_brain_data  # Replace with the actual function from Charlene's code
+from src.saggital_brain.sagittal_brain import process_brain_data  # Replace with the actual function from Charlene's code
 
 class TestSagittalBrain(unittest.TestCase):
 
